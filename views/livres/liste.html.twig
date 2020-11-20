@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+
+{% block titre %}
+  Liste des livres
+{% endblock %}
+{% block contenu %}
+{% if message|length %}
+  <div class="alert alert-{{message.type}}" role="alert">{{ message.contenu }}</div>
+{% endif %}
+  <table class="table test-center mon-tableau" id="tableau-livres">
+    <thead>
+      <tr class="table-dark">
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Nombre de pages</th>
+        <th colspan="2" class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for livre in livres %}
+        <tr>
+          <td><a href="/livres/{{livre._id}}">{{ livre.nom }}
+          </a></td>
+          <td>{{ livre.auteur }}</td>
+          <td>{{ livre.pages }}</td>
+          <td><a href="#" class="btn btn-warning">Modifer</a></td>
+          <td>
+            <form method="POST" action="/livres/delete/{{livre._id}}" onSubmit="return confirm('Voulez-vous vraiment supprimer le livre ?');">
+              <button class="btn btn-danger" type="submit">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <button class="btn btn-success w-100" onClick="afficherFormulaire()">Ajouter</button>
+  <form id="ajout-form" class="d-none" action="" method="POST">
+    <filedset>
+      <legend>Création d'un livre</legend>
+      <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" class="form-control" id="titre" name="titre">
+      </div>
+      <div class="form-group">
+        <label for="title">Auteur</label>
+        <input type="text" class="form-control" id="auteur" name="auteur">
+      </div>
+      <div class="form-group">
+        <label for="title">Pages</label>
+        <input type="number" class="form-control" id="pages" name="pages">
+      </div>
+      <div class="form-group">
+        <label for="title">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+      </div>
+      <button class="btn btn-primary" type="submit">Valider</button>
+  </filedset>
+  </form>
+  <script src="/javascript/ajoutLivre.js"></script>
+{% endblock %}
