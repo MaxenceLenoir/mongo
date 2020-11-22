@@ -23,7 +23,7 @@
           </a></td>
           <td>{{ livre.auteur }}</td>
           <td>{{ livre.pages }}</td>
-          <td><a href="#" class="btn btn-warning">Modifer</a></td>
+          <td><a href="/livres/modification/{{livre._id}}" class="btn btn-warning">Modifer</a></td>
           <td>
             <form method="POST" action="/livres/delete/{{livre._id}}" onSubmit="return confirm('Voulez-vous vraiment supprimer le livre ?');">
               <button class="btn btn-danger" type="submit">Supprimer</button>

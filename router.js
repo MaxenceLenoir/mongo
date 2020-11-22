@@ -15,7 +15,9 @@ router.get('/livres', (requete, response) => {
   .then(livres => {
     response.render('livres/liste.html.twig', {livres : livres, message: response.locals.message})
   })
-  .catch()
+  .catch(error => {
+    console.log(error);
+  })
 })
 
 router.post('/livres', (requete, response) => {
@@ -30,6 +32,33 @@ router.post('/livres', (requete, response) => {
       .then(livre => {
         response.redirect('livres');
       })
+      .catch(error => {
+        console.log(error);
+      })
+})
+
+// Affichage detaillee d'un livre
+router.get('/livres/:id', (requete, response) => {
+  livreModel.findById(requete.params.id)
+  .exec()
+  .then(livre => {
+    response.render('livres/livre.html.twig', {livre: livre, isModification: false})
+  })
+  .catch(error => {
+    console.log(error);
+  })
+})
+
+//Modification d'un livre
+router.get('/livres/modification/:id', (requete, response) => {
+  livreModel.findById(requete.params.id)
+  .exec()
+  .then(livre => {
+    response.render('livres/livre.html.twig', {livre: livre, isModification: true})
+  })
+  .catch(error => {
+    console.log(error);
+  })
 })
 
 router.post('/livres/delete/:id', (requete, response) => {
@@ -42,16 +71,34 @@ router.post('/livres/delete/:id', (requete, response) => {
       }
       response.redirect('/livres')
     })
+    .catch(error => {
+      console.log(error);
+    })
 })
 
-router.get('/livres/:id', (requete, response) => {
-  livreModel.findById(requete.params.id)
+router.post('/livres/modificationServer', (requete, response) => {
+  const livreUpdate = {
+    nom : requete.body.titre,
+    auteur : requete.body.auteur,
+    pages : requete.body.pages,
+    description : requete.body.description,
+  }
+  livreModel.update({_id:requete.body.identifiant}, livreUpdate)
   .exec()
-  .then(livre => {
-    response.render('livres/livre.html.twig', {livre: livre})
+  .then(resultat => {
+    if(resultat.nModified < 1) throw new Error("Requete de modification echouee") 
+    requete.session.message = {
+      type : 'success',
+      contenu : 'Modification effectuée'
+    }
+    response.redirect('/livres')
   })
   .catch(error => {
-    console.log(error);
+    requete.session.message = {
+      type : 'danger',
+      contenu :  error.message
+    }
+    response.redirect('/livres')
   })
 })
 

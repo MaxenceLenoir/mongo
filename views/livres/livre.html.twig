@@ -6,17 +6,45 @@
 {% block contenu %}
   <div class="row m-2">
     <div class="col-6">
-      <h4>Informations :</h4>
-      <div>Auteur : {{ livre.auteur }}</div>
-      <div> Nombre de pages : {{ livre.pages }}</div>
-      <div>Photo : </div>
-      <img src="https://picsum.photos/200/200" alt="">
+      {% if isModification %}
+        <form action="/livres/modificationServer" method="POST">
+          <h4>Information</h4>
+          <div class="form-group">
+            <label for="title">Titre</label>
+            <input type="text" class="form-control" id="titre" name="titre" value="{{livre.nom}}">
+          </div>
+          <div class="form-group">
+            <label for="title">Auteur</label>
+            <input type="text" class="form-control" id="auteur" name="auteur" value="{{livre.auteur}}">
+          </div>
+          <div class="form-group">
+            <label for="title">Pages</label>
+            <input type="number" class="form-control" id="pages" name="pages" value="{{livre.pages}}">
+          </div>
+          <h4>Resume : </h4>
+          <div class="form-group">
+            <label for="title">Description</label>
+            <textarea type="text" class="form-control" id="description" name="description" rows="3">{{livre.description}}</textarea>
+          </div>
+          <input type="hidden" name="identifiant" value="{{livre._id}}">
+          <input type="submit" value="valider" class="btn btn-primary">
+        </form>
+      {% else %}
+        <h4>Informations :</h4>
+        <div>Auteur : {{ livre.auteur }}</div>
+        <div> Nombre de pages : {{ livre.pages }}</div>
+        <div>Photo : </div>
+        <img src="https://picsum.photos/200/200" alt="">
+      {% endif %}
     </div>
     <div class="col-6">
-      <h4>Resume : </h4>
-      <div>
-        {{ livre.description }}
-      </div>
+      {% if isModification %}
+      {% else %}
+        <h4>Resume : </h4>
+        <div>
+          {{ livre.description }}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
