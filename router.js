@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const twig = require('twig');
 const livreModel = require('./models/livre.model')
-
+const fs = require('fs');
 const router = express.Router();
 const multer = require('multer');
 
@@ -53,7 +53,8 @@ router.post('/livres', upload.single("image"), (requete, response) => {
     nom: requete.body.titre,
     auteur: requete.body.auteur,
     pages: requete.body.pages,
-    description: requete.body.description
+    description: requete.body.description,
+    image: requete.file.path.substring(14)
     })
     livre.save()
       .then(livre => {
@@ -89,17 +90,25 @@ router.get('/livres/modification/:id', (requete, response) => {
 })
 
 router.post('/livres/delete/:id', (requete, response) => {
-  livreModel.remove({_id: requete.params.id})
+  const livre = livreModel.findById(requete.params.id)
+    .select("image")
     .exec()
-    .then(resultat =>{
-      requete.session.message = {
-        type : 'success',
-        contenu : 'Suppression effectuée'
-      }
-      response.redirect('/livres')
-    })
-    .catch(error => {
-      console.log(error);
+    .then(livre => {
+      fs.unlink("./public/images/"+livre.image, error => {
+        console.log(error);
+      })
+      livreModel.remove({_id: requete.params.id})
+        .exec()
+        .then(resultat =>{
+          requete.session.message = {
+            type : 'success',
+            contenu : 'Suppression effectuée'
+          }
+          response.redirect('/livres')
+        })
+        .catch(error => {
+          console.log(error);
+        })
     })
 })
 
