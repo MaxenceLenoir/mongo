@@ -4,6 +4,33 @@ const twig = require('twig');
 const livreModel = require('./models/livre.model')
 
 const router = express.Router();
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination : (requete, file, cb) => {
+    cb(null, "./public/images/")
+  },
+  filename : (requete, file, cb) => {
+    const date = new Date().toLocaleDateString();
+    cb(null, Math.round(Math.random() * 10000)+"-"+file.originalname)
+  }
+});
+
+const fileFilter = (requete, file, cb) => {
+  if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
+    cb(null, true)
+  } else {
+    cb(new Error("l'image n'est pas acceptee"), false)
+  }
+}
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter : fileFilter
+})
 
 router.get('/', (requete, response) => {
   response.render('accueil.html.twig')
@@ -20,7 +47,7 @@ router.get('/livres', (requete, response) => {
   })
 })
 
-router.post('/livres', (requete, response) => {
+router.post('/livres', upload.single("image"), (requete, response) => {
   const livre = new livreModel({
     _id: new mongoose.Types.ObjectId(),
     nom: requete.body.titre,
