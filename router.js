@@ -89,6 +89,28 @@ router.get('/livres/modification/:id', (requete, response) => {
   })
 })
 
+router.post('/livres/updateImage', upload.single("image"), (requete, response) => {
+  const livre = livreModel.findById(requete.body.identifiant)
+  .select("image")
+  .exec()
+  .then(livre => {
+    fs.unlink("./public/images/"+livre.image, error => {
+      console.log(error);
+    })
+    const livreUpdate = {
+      image : requete.file.path.substring(14)
+    }
+    livreModel.update({_id: requete.body.identifiant}, livreUpdate)
+    .exec()
+    .then(resultat => {
+      response.redirect("/livres/modification/"+requete.body.identifiant)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  })
+})
+
 router.post('/livres/delete/:id', (requete, response) => {
   const livre = livreModel.findById(requete.params.id)
     .select("image")

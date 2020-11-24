@@ -29,6 +29,20 @@
           <input type="hidden" name="identifiant" value="{{livre._id}}">
           <input type="submit" value="valider" class="btn btn-primary">
         </form>
+        <form action="/livres/updateImage" method="POST" enctype="multipart/form-data">
+          <h2>Image</h2>
+          <div class="row">
+            <img src="/images/{{livre.image}}" class="col-3">
+            <div class="col-9">
+              <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control-file" id="image" name="image">
+              </div>
+              <input type="hidden" name="identifiant" value="{{livre._id}}">
+              <input type="submit" value="Modifier l'image" class="btn btn-primary">
+            </div>
+          </div>
+        </form>
       {% else %}
         <h4>Informations :</h4>
         <div>Auteur : {{ livre.auteur }}</div>
