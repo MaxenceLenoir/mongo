@@ -29,20 +29,20 @@ const upload = multer({
   fileFilter : fileFilter
 })
 
-router.get('/livres', livreController.livres_affichage)
+router.get('/', livreController.livres_affichage)
 
-router.post('/livres', upload.single("image"), livreController.livres_ajout)
+router.post('/', upload.single("image"), livreController.livres_ajout)
 
 // Affichage detaillee d'un livre
-router.get('/livres/:id', livreController.livre_affichage)
+router.get('/:id', livreController.livre_affichage)
 
 //Modification d'un livre
-router.get('/livres/modification/:id', livreController.livre_update)
+router.get('/modification/:id', livreController.livre_update)
 
-router.post('/livres/updateImage', upload.single("image"), livreController.livre_update_image)
+router.post('/updateImage', upload.single("image"), livreController.livre_update_image)
 
-router.post('/livres/delete/:id', livreController.livre_delete)
+router.post('/delete/:id', livreController.livre_delete)
 
-router.post('/livres/modificationServer', livreController.livre_modification_server)
+router.post('/modificationServer', livreController.livre_modification_server)
 
 module.exports = router;

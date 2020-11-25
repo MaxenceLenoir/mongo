@@ -15,7 +15,16 @@
           </div>
           <div class="form-group">
             <label for="title">Auteur</label>
-            <input type="text" class="form-control" id="auteur" name="auteur" value="{{livre.auteur}}">
+            <select class="form-control" id="auteur" name="auteur">
+              {% for auteur in auteurs %}
+                <option value="{{auteur._id}}" 
+                {% if auteur.id == livre.auteur.id %}
+                  selected
+                {% endif %}>
+                  {{ auteur.prenom }} - {{ auteur.nom }}
+                </option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label for="title">Pages</label>
@@ -45,7 +54,7 @@
         </form>
       {% else %}
         <h4>Informations :</h4>
-        <div>Auteur : {{ livre.auteur }}</div>
+        <div>Auteur : {{livre.auteur.prenom}} - {{livre.auteur.nom}}</div>
         <div> Nombre de pages : {{ livre.pages }}</div>
         <div>Photo : </div>
         <img src="/images/{{livre.image}}" alt="">
