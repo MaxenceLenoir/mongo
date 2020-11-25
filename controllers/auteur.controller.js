@@ -21,7 +21,7 @@ exports.auteurs_affichage = (requete, response) => {
   .populate("livres")
   .exec()
   .then(auteurs => {
-    response.render("auteurs/liste.html.twig", {auteurs: auteurs})
+    response.render("auteurs/liste.html.twig", {auteurs: auteurs, isModification: false})
   })
   .catch(error => {
     console.log(error);
@@ -58,5 +58,34 @@ exports.auteur_suppression = (requete, response) => {
       .exec()
       .then(response.redirect("/auteurs"))
     )
+  })
+}
+
+exports.auteur_modification = (requete, response) => {
+  auteurModel.findById(requete.params.id)
+  .populate("livres")
+  .exec()
+  .then(auteur => {
+    response.render("auteurs/auteur.html.twig", {auteur: auteur, isModification: true});
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
+
+exports.auteur_modification_validation = (requete, response) => {
+  const auteurUpdate = {
+    nom: requete.body.nom,
+    prenom: requete.body.prenom,
+    age: requete.body.age,
+    sexe: requete.body.sexe ? true : false
+  }
+  auteurModel.update({_id: requete.body.identifiant}, auteurUpdate)
+  .exec()
+  .then( resultat => {
+    response.redirect("/auteurs")
+  })
+  .catch(error => {
+    console.log(error);
   })
 }
