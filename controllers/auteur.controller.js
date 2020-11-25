@@ -1,6 +1,7 @@
 // const livreModel = require('../models/livre.model');
 const mongoose = require('mongoose');
 const auteurModel = require("../models/auteur.model");
+const livreModel = require("../models/livre.model")
 const fs = require('fs');
 
 exports.auteur_affichage = (requete, response) => {
@@ -41,5 +42,21 @@ exports.auteur_ajout = (requete, response) => {
   })
   .catch(error => {
     console.log(error);
+  })
+}
+
+exports.auteur_suppression = (requete, response) => {
+  auteurModel.find()
+  .where('nom').equals('anonyme')
+  .exec()
+  .then(auteur => {
+    livreModel.updateMany({"auteur": requete.params.id}, {"$set": {"auteur": auteur[0]._id}}, {multi: true})
+    .exec()
+    .then(
+      auteurModel.deleteOne({_id: requete.params.id})
+      .where("nom").ne("anonyme")
+      .exec()
+      .then(response.redirect("/auteurs"))
+    )
   })
 }

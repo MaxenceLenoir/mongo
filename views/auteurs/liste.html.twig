@@ -21,7 +21,7 @@
           <td class="align-middle">{{ auteur.livres|length}}</td>
           <td class="align-middle"><a href="/livres/modification/{{livre._id}}" class="btn btn-warning">Modifer</a></td>
           <td class="align-middle">
-            <form method="POST" action="/livres/delete/{{livre._id}}" onSubmit="return confirm('Voulez-vous vraiment supprimer le livre ?');">
+            <form method="POST" action="/auteurs/delete/{{auteur._id}}" onSubmit="return confirm('Voulez-vous vraiment supprimer l\'auteur ?');">
               <button class="btn btn-danger" type="submit">Supprimer</button>
             </form>
           </td>
